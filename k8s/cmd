@@ -1,1 +1,5 @@
-kubectl create secret general pgpassword --from-literal PGPASSWORD=password
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=password
+
+//To install ingress-nginx , a mandatory command:
+1-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
+2-minikube addons enable ingress
