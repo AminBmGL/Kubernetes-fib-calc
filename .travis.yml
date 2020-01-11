@@ -7,8 +7,8 @@ env:
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t medamin2019/fib-client-test -f ./frontend/Dockerfile.dev ./frontend
-  - echo $K8S_CONFIG > config-master
-  - kubectl config --kubeconfig=config-master
+  - tee $K8S_CONFIG config-master.json
+  - kubectl config --kubeconfig=config-master.json
 script:
   - docker run mesamin2019/fib-client-test npm test -- --coverage
 
