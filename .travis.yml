@@ -7,11 +7,12 @@ env:
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t medamin2019/fib-client-test -f ./frontend/Dockerfile.dev ./frontend
-  - echo $K8S_CONFIG | tee config-master.json
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - kubectl config --kubeconfig=config-master.json
+  - echo $K8S_CONFIG | tee ${HOME}/.kube/config.json
+  - export KUBECONFIG=${HOME}/.kube/config.json
+  - kubecl config view
 script:
   - docker run mesamin2019/fib-client-test npm test -- --coverage
 
