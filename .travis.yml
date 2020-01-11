@@ -1,0 +1,19 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t medamin2019/fib-client-test -f ./frontend/Dockerfile.dev ./frontend
+  - echo $K8S_CONFIG > config-master
+  - kubectl config --kubeconfig=config-master
+script:
+  - docker run mesamin2019/fib-client-test npm test -- --coverage
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
