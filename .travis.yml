@@ -13,7 +13,7 @@ before_install:
   - mkdir -p ${HOME}/.kube
   - echo $K8S_CONFIG | tee ${HOME}/.kube/config.json
   - export KUBECONFIG=${HOME}/.kube/config.json
-  - kubecl config view
+  - kubectl config view
 script:
   - docker run mesamin2019/fib-client-test npm test -- --coverage
 
