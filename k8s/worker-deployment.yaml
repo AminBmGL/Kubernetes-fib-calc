@@ -17,6 +17,6 @@ spec:
           image: medamin2019/fib-worker
           env:
             - name: REDIS_HOST
-              value: redis-cluster-ip-servic
+              value: redis-cluster-ip-service
             - name: REDIS_PORT
               value: '6379'

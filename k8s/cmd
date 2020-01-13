@@ -1,5 +1,51 @@
+
+//Pg password secret
 kubectl create secret generic pgpassword --from-literal PGPASSWORD=password
 
 //To install ingress-nginx , a mandatory command:
 1-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
-2-minikube addons enable ingress
+
+// if in minikube  : 2-minikube addons enable ingress
+
+//if in AWS
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.27.0/deploy/static/provider/aws/service-l4.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.27.0/deploy/static/provider/aws/patch-configmap-l4.yaml
+
+
+//setup prometheus / grafana /alert manager stack
+
+git clone https://github.com/coreos/kube-prometheus.git
+
+cd kube-prometheus 
+
+kubectl create -f manifests/setup
+
+//wait some time 
+
+kubectl create -f manifests/
+
+
+------------------------------------------------------------------------
+
+//applying the kubernetes files from the repo :
+ kubectl apply -f k8s/
+
+
+
+
+
+ -------------------------------------------------------------
+
+//Not working for the moment 
+
+// enable prometheus dashboard on http://localhost:9090
+
+ kubectl --namespace monitoring port-forward svc/prometheus-k8s 9090
+
+// enable grafana dashboard on http://localhost:3000
+
+kubectl --namespace monitoring port-forward svc/grafana 3000
+
+// enable alert manager dashboard on http://localhost:9093
+
+kubectl --namespace monitoring port-forward svc/alertmanager-main 9093
