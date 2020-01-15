@@ -8,26 +8,32 @@ env:
     - KUBECONFIG=~/.kube/config
     - KEYSHOME=$HOME/keys
 before_install:
+  # dockerhub login
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+  # preapare test image
   - docker build -t $DOCKER_USERNAME/fib-client-test -f ./frontend/Dockerfile.dev ./frontend
 
-  - mkdir ~/keys
+  # get credentials
+  - mkdir $KEYSHOME
   - echo $CERTAUTH | base64 --decode > $KEYSHOME/ca.pem
   - echo $CREDPERM | base64 --decode > $KEYSHOME/cred.pem
   - echo $REDKEY | base64 --decode > $KEYSHOME/cred-key.pem
 
+  # install kubectl
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
 
+  # set kubectl config file
   - kubectl config set-cluster $NAME --certificate-authority=$KEYSHOME/ca.pem --embed-certs=true --server=$KUBESERVER
   - kubectl config set-context $NAME --cluster=$NAME --user=$NAME
   - kubectl config use-context $NAME
   - kubectl config set-credentials $NAME --client-certificate=$KEYSHOME/cred.pem --client-key=$KEYSHOME/cred-key.pem --embed-certs=true --username=$KUBEUSERNAME --password=$KUBEPASSWORD
   - kubectl config set-credentials $NAME-basic-auth --username=$KUBEUSERNAME --password=$KUBEPASSWORD
-
-  - echo 'script is working'
   - cat $KUBECONFIG
+
+  # view connected nodes
   - kubectl get nodes
 
 

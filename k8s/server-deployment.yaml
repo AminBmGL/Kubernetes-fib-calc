@@ -14,7 +14,7 @@ spec:
     spec: 
       containers:
         - name: server
-          image: medamin2019/fib-server
+          image: sametma/fib-server
           ports:
             - containerPort: 5000
           env:
